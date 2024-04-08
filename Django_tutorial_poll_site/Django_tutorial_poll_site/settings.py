@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'Django_tutorial_poll_site.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        "NAME": 'poll_db',
+        "USER": 'poll_user',
+        "PASSWORD": 'poll_password',
+        "HOST": '127.0.0.1',
+        "PORT": '5432',
     }
 }
 
