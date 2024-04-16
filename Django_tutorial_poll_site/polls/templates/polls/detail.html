@@ -6,11 +6,28 @@
     <title>Polls List</title>
 </head>
 <body>
-    <h2>{{ question.question_text }}</h2>
+    <!-- <h2>{{ question.question_text }}</h2>
     <ul>
     {% for choice in question.choice_set.all %}
         <li>{{ choice.choice_text }}</li>
     {% endfor %}
-    </ul>
+    </ul> -->
+    <form action="{% url 'polls:vote' question.id %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend><h1>{{ question.question_text }}</h1></legend>
+            {% if error_message %}<p style="color: red;"><strong>{{ error_message }}</strong></p>{% endif %}
+            {% for choice in question.choice_set.all %}
+                <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}">
+                <!-- name属性により全てのラジオボタンが同じ名前（choice）を持つため、一度に一つの選択肢のみが選択可能になる -->
+                <!-- id属性はラジオボタンに一意の ID を割り当てる。forloop.counter は Django テンプレートの内蔵変数で、ループの各イテレーションで自動的に1ずつ増加します -->
+                <!-- value属性はラジオボタンが選択された場合にフォームと共に送信される値を設定する -->
+                <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>
+                <!-- <label> タグは、ラジオボタンの説明を提供する -->
+                <!-- for属性はラベルが関連付けられている入力要素（この場合は特定のラジオボタン）の ID を指定する -->
+            {% endfor %}
+        </fieldset>
+        <input type="submit" value="Vote">
+    </form>
 </body>
 </html>
