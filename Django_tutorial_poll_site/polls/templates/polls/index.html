@@ -9,8 +9,9 @@
     {% if latest_question_list %}
     <ul>
         {% for question in latest_question_list %}
-        <li><a href="{% url 'detail' question.id %}">{{ question.question_text }}</a></li>
-		<!-- detailはpolls.urls モジュール の path() 関数で name 引数を定義しているため、ここで使うことができる -->
+        <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+		<!-- detailはpolls.urls モジュールの path() 関数で name 引数を定義しているため、ここで使うことができる -->
+		<!-- "polls:"はpoll.urls モジュールURLのapp_nameで名前空間を設定している。他のアプリの同じビュー名があっても衝突しないようにするため -->
         {% endfor %}
     </ul>
     {% else %}
