@@ -6,8 +6,11 @@
     <title>Polls List</title>
 </head>
 <body>
-	{{ question.question_text }}
-    <br>
-	{{ question.pub_date }}
+    <h2>{{ question.question_text }}</h2>
+    <ul>
+    {% for choice in question.choice_set.all %}
+        <li>{{ choice.choice_text }}</li>
+    {% endfor %}
+    </ul>
 </body>
 </html>
