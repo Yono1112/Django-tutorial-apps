@@ -162,4 +162,4 @@ cython_debug/
 .DS_Store
 
 .pg_service.conf
-.pgpass
+.my_pgpass

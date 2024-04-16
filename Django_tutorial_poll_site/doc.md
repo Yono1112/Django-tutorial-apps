@@ -119,3 +119,66 @@ Citations:
 [13] https://qiita.com/tfrcm/items/27d2c9e4b3334447b6af
 [14] https://hackernoon.com/ja/django-%E3%83%A2%E3%83%87%E3%83%AB%E3%81%AE%E5%A4%89%E6%9B%B4%E3%82%92%E6%9C%AC%E7%95%AA%E7%92%B0%E5%A2%83%E3%81%AB%E3%83%87%E3%83%97%E3%83%AD%E3%82%A4%E3%81%99%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AE%E5%88%9D%E5%BF%83%E8%80%85%E3%82%AC%E3%82%A4%E3%83%89
 ```
+
+## Djangoの逆参照について
+
+```
+Djangoでは、モデル間の関係を定義するために主にForeignKey、OneToOneField、またはManyToManyFieldのようなフィールドを使用します。これらのフィールドは、モデル間で1対多、1対1、多対多のリレーションシップを設定するために使われます。逆参照（逆方向の関連付け）機能は、これらの関係性を活用して、関連するオブジェクト群にアクセスするためのものです。
+
+### 逆参照の基本
+
+たとえば、あるQuestionモデルが複数のChoiceモデルのインスタンスを持つ場合（1対多のリレーションシップ）、ChoiceモデルはForeignKeyを使ってQuestionモデルにリンクされます。この場合、QuestionインスタンスからそのChoiceインスタンス群にアクセスするには逆参照を使用します。
+
+### ForeignKeyの例
+
+Choiceモデルが以下のように定義されているとします。
+
+`
+python
+
+from django.db import models
+
+class Question(models.Model):
+    question_text = models.CharField(max_length=200)
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice_text = models.CharField(max_length=100)
+    votes = models.IntegerField(default=0)
+`
+
+ここで、ChoiceモデルはQuestionモデルにForeignKeyを通じて紐付けられています。ForeignKeyのon_delete=models.CASCADEは、関連するQuestionが削除された場合に、それに紐付けられたChoiceも自動的に削除されることを指定しています。
+
+### 逆参照の使用
+
+Djangoでは、ForeignKeyフィールドによって作成される逆参照を利用するために、デフォルトで<related_model>_setという属性を提供します。この例では、Questionインスタンスに対してchoice_setという属性を使って、そのQuestionに紐付けられた全てのChoiceオブジェクトにアクセスすることができます。
+
+`
+python
+
+question = Question.objects.get(id=1)
+choices = question.choice_set.all()  # Questionに紐付けられた全Choiceを取得
+`
+
+### カスタム名での逆参照
+
+related_nameオプションをForeignKeyフィールドに指定することで、デフォルトの<related_model>_setではなく、任意の名前で逆参照を行うことができます。例えば、次のように設定することが可能です。
+
+`
+python
+
+class Choice(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name="choices")
+` 
+
+これにより、choice_setの代わりにchoicesを使って逆参照を行うことができるようになります。
+
+`
+python
+
+question = Question.objects.get(id=1)
+choices = question.choices.all()  # 'choices'を使って逆参照
+`
+
+この逆参照機能は、Djangoにおいてリレーショナルデータを扱う際に非常に強力なツールです。これにより、リレーションシップを通じて関連するオブジェクト群を簡単に操作し、アプリケーションのロジックを直感的に記述することが可能になります。
+```
