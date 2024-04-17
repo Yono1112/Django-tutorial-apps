@@ -1,10 +1,11 @@
 import datetime
+import html
 
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
 
-from .models import Question
+from .models import Question, Choice
 
 
 class QuestionModelTests(TestCase):
@@ -125,3 +126,38 @@ class QuestionDetailViewTests(TestCase):
         url = reverse("polls:detail", args=(past_question.id,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
+
+
+class QuestionVoteTests(TestCase):
+    def setUp(self):
+        """
+        Set up test data for the poll app.
+        This method is run before each test execution.
+        It creates a question and associated choices for testing.
+        """
+        self.question = Question.objects.create(question_text="Sample Question", pub_date=timezone.now())
+        self.choice1 = Choice.objects.create(question=self.question, choice_text='Choice 1', votes=0)
+        self.choice2 = Choice.objects.create(question=self.question, choice_text='Choice 2', votes=0)
+
+    def test_vote_for_choice(self):
+        """
+        Tests if voting for a specific choice correctly increments its vote count
+        and redirects to the results page.
+        """
+        url = reverse('polls:vote', args=(self.question.id,))
+        response = self.client.post(url, {'choice': self.choice1.id})
+        self.assertRedirects(response, reverse('polls:results', args=(self.question.id,)))
+        self.assertEqual(Choice.objects.get(id=self.choice1.id).votes, 1)
+
+    def test_vote_without_choice(self):
+        """
+        Tests if attempting to vote without selecting a choice returns to the
+        detail page and displays an appropriate error message.
+        """
+        url = reverse('polls:vote', args=(self.question.id,))
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 200)
+        content = html.unescape(response.content.decode('utf-8'))
+        self.assertIn("You didn't select a choice", content)
+        self.assertEqual(Choice.objects.get(id=self.choice1.id).votes, 0)
+        self.assertEqual(Choice.objects.get(id=self.choice2.id).votes, 0)

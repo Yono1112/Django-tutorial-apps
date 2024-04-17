@@ -341,3 +341,31 @@ ALTER USER <DetabaseUser> CREATEDB;
 
 \q
 ```
+
+## 自動テストにおけるHTMLエンティティに関する問題について
+
+- HTMLエンティティ
+    - HTMLで特別な意味を持つ文字（例えば <, >, & など）や、直接HTMLに含めることができない特殊な文字を表現するために使用されます。
+    - シングルクォートの場合、次のようにいくつかの形式で表現されることがあります
+        - \&#39; – Decimal形式
+        - \&#x27; – Hexadecimal形式
+        - \&apos; – Entity name（HTML5ではサポートされていない場合があります）
+- 自動テストのコードに`self.assertContains(response, "You didn't select a choice")`のようなHTMLエンティティが含まれている場合、Django テンプレートシステムでは、デフォルトで HTML を自動的にエスケープします。これは、XSS 攻撃などのセキュリティリスクを軽減するために重要です。
+- テスト目的でエスケープを無効にしたい場合
+1. エンティティのデコード
+    - テストでHTMLエンティティを扱わないようにする方法は、レスポンスを解析してデコードすることです。PythonにはHTMLエンティティをデコードするためのツールがいくつかあります。 
+    - HTMLパーサーを使用
+        - html モジュールを使ってエンティティをデコードします。
+    ```python
+    import html
+
+    def test_vote_without_choice(self):
+        url = reverse('polls:vote', args=(self.question.id,))
+        response = self.client.post(url)
+        content = html.unescape(response.content.decode('utf-8'))
+        self.assertIn("You didn't select a choice", content)
+
+    ```
+- 注意事項
+    - HTMLエンティティをデコードまたは無効にすることは、テストの便宜を図るために有用ですが、本番環境ではセキュリティ上の観点から自動エスケープ機能を無効にすることは推奨されません。
+    - テスト環境と本番環境の挙動が異なる場合は、その違いを理解し、適切に対処することが重要です。
