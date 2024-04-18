@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.utils import timezone
+from django.contrib import admin
 
 
 class Question(models.Model):
@@ -13,6 +14,12 @@ class Question(models.Model):
     def __str__(self):
         return self.question_text
 
+    # デコレータ(@admin.display)は直下に定義された関数やメソッドに対して適用される
+    @admin.display(
+        boolean=True,
+        ordering="pub_date",
+        description="Published recently?",
+    )
     def was_published_recently(self):
         """Determine if the question was published within the last 24 hours"""
         return (
