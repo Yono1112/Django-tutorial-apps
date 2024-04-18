@@ -369,3 +369,9 @@ ALTER USER <DetabaseUser> CREATEDB;
 - 注意事項
     - HTMLエンティティをデコードまたは無効にすることは、テストの便宜を図るために有用ですが、本番環境ではセキュリティ上の観点から自動エスケープ機能を無効にすることは推奨されません。
     - テスト環境と本番環境の挙動が異なる場合は、その違いを理解し、適切に対処することが重要です。
+
+## Djangoのソースファイルのパスを出力するコマンド[Django のソースファイルの場所はどこ？](https://docs.djangoproject.com/ja/5.0/intro/tutorial07/)
+
+```bash
+python -c "import django; print(django.__path__)"
+```
