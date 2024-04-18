@@ -4,8 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Polls List</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
 </head>
 <body>
+    <h1>Poll Site</h1>
+    <img src="{% static 'polls/images/background.png'%}" alt="My iamge">
     {% if latest_question_list %}
     <ul>
         {% for question in latest_question_list %}
