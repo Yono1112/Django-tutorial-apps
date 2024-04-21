@@ -47,6 +47,22 @@ class DetailView(generic.DetailView):
         """
         return Question.objects.filter(pub_date__lte=timezone.now())
 
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests on the question detail page for voting on a choice.
+        """
+        question = self.get_object()
+        try:
+            selected_choice = question.choice_set.get(pk=request.POST['choice'])
+        except (KeyError, Choice.DoesNotExist):
+            # Redisplay the question voting form with an error message.
+            context = {"question": question, "error_message": "You didn't select a choice"}
+            return render(request, self.template_name, context)
+        else:
+            selected_choice.votes = F('votes') + 1
+            selected_choice.save()
+            return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
 
 # def detail(request, question_id):
 #     question = get_object_or_404(Question, pk=question_id)
@@ -61,22 +77,3 @@ class ResultsView(generic.DetailView):
 # def results(request, question_id):
 #     question = get_object_or_404(Question, pk=question_id)
 #     return render(request, "polls/results.html", {"question": question})
-
-
-def vote(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    try:
-        # detail.htmlファイルのinput属性で送信しているvalue属性(今回はChoiceのid)を受け取る
-        # request.POSTにキーを指定すると、送信したデータにアクセスできる
-        selected_choice = question.choice_set.get(pk=request.POST["choice"])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the question voting form.
-        context = {"question": question, "error_message": "You didn't select a choice"}
-        return render(request, "polls/detail.html", context)
-    else:
-        selected_choice.votes = F("votes") + 1
-        selected_choice.save()
-        # POST データが成功した後は常に HttpResponseRedirect を返す必要がある
-        # reverse()　はビュー関数中での URL のハードコードを防ぐ
-        # 引数には制御を渡したいビューの名前と、そのビューに与える URL パターンの位置引数を与える
-        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
