@@ -1,6 +1,6 @@
 from django.db.models import F
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
@@ -19,22 +19,27 @@ class IndexView(generic.ListView):
             "-pub_date"
         )[:5]
 
+    def post(self, request, *args, **kwargs):
+        question_text = request.POST.get('question_text', '').strip()
+        if question_text:
+            new_question = Question(question_text=question_text, pub_date=timezone.now())
+            new_question.save()
+            return redirect(reverse('polls:index'))
+        else:
+            request.session['error_message'] = "The question text cannot be empty."
+            return redirect(reverse('polls:index'))
+            # return render(request, self.template_name, {
+            #     'error_message': "The question text cannot be empty.",
+            #     'latest_question_list': self.get_queryset()
+            # })
 
-# def index(request):
-#     # django.shortcuts.render関数を使用して
-#     # 内部的にテンプレートのロード、コンテキストのレンダリング、およびレンダリングされた内容を
-#     # HttpResponseオブジェクトに包んで返す一連の処理を自動的に行います
-#     latest_question_list = Question.objects.order_by("-pub_date")[
-#         :5
-#     ]  # マイナス記号(-)が降順を示す
-#     context = {"latest_question_list": latest_question_list}
-#     return render(request, "polls/index.html", context)
-
-#     # 別の書き方: テンプレートのロードとレンダリング、HTTP応答の作成が明示的に分けて書かれています。
-#     # latest_question_list = Question.objects.order_by("-pub_date")[:5]
-#     # template = loader.get_template("polls/index.html")
-#     # context = {"latest_question_list": latest_question_list}
-#     # return HttpResponse(template.render(context, request))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # セッションからエラーメッセージを取得し、それをコンテキストに追加してからセッションをクリア
+        error_message = self.request.session.pop('error_message', None)
+        if error_message:
+            context['error_message'] = error_message
+        return context
 
 
 class DetailView(generic.DetailView):

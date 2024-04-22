@@ -1,41 +1,38 @@
+{% extends "polls/header.html" %}
+
+{% block title %}Polls List{% endblock %}
+
 {% load django_bootstrap5 %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polls List</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
-    {% bootstrap_css %}
-    {% bootstrap_javascript %}
-</head>
-<body>
-    <h1>Poll Site</h1>
-    <img src="{% static 'polls/images/background.png'%}" alt="My iamge">
-    {% if latest_question_list %}
-    <ul>
-        {% for question in latest_question_list %}
-        <li><a href="{% url 'polls:detail' question.id %}" target="_blank">{{ question.question_text }}</a></li>
-		<!-- detailはpolls.urls モジュールの path() 関数で name 引数を定義しているため、ここで使うことができる -->
-		<!-- "polls:"はpoll.urls モジュールURLのapp_nameで名前空間を設定している。他のアプリの同じビュー名があっても衝突しないようにするため -->
-        {% endfor %}
-    </ul>
+
+{% block content %}
+<main class="container mt-4">
+    <h1 class="mb-4">Polls List</h1>
+
+    <form action="{% url 'polls:index' %}" method="post">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" name="question_text" class="form-control" placeholder="Enter new question">
+            <button class="btn btn-success" type="submit">Add Question</button>
+        </div>
+    </form>
+
+    {% if error_message %}
+        {% bootstrap_alert content=error_message alert_type="danger" %}
+    {% endif %}
+
     {% else %}
-    <p>No polls are available.</p>
-    {% endif %}
-    {% bootstrap_button button_type="submit" content="hello"%}
-    {% if latest_question_list %}
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Dropdown button
-        </button>
-        <ul class="dropdown-menu">
+        <div class="list-group">
             {% for question in latest_question_list %}
-                <li><a class="dropdown-item" href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li>
+                <a href="{% url 'polls:detail' question.id %}" class="list-group-item list-group-item-action">
+                    {{ question.question_text }}
+                </a>
+                <!-- detailはpolls.urls モジュールの path() 関数で name 引数を定義しているため、ここで使うことができる -->
+                <!-- "polls:"はpoll.urls モジュールURLのapp_nameで名前空間を設定している。他のアプリの同じビュー名があっても衝突しないようにするため -->
             {% endfor %}
-        </ul>
-    </div>
+        </div>
+    {% else %}
+        {% bootstrap_alert content="No polls are available" alert_type="danger" %}
     {% endif %}
-</body>
-</html>
+
+</main>
+{% endblock content %}

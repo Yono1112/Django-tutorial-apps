@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Polls Site{% endblock title %}</title>
+    {% load static django_bootstrap5 %}
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+    <header style="display: flex; align-items: center;">
+        <img src="{% static 'polls/images/background.png' %}" alt="Poll Site Image" class="header-image">
+        <form action="{% url 'polls:index' %}" method="get">
+            <button type="submit" class="header-button">
+                Poll Site
+            </button>
+        </form>
+    </header>
+    {% block content %}{% endblock content %}
+</body>
+</html>
