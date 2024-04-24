@@ -375,3 +375,29 @@ ALTER USER <DetabaseUser> CREATEDB;
 ```bash
 python -c "import django; print(django.__path__)"
 ```
+
+## Djangoのログアウトビューについて
+
+```
+Djangoのデフォルトのログアウトビュー（LogoutView）は、GETリクエストを受け付けないように設定されており、主にPOSTメソッドを使用することを想定しています。
+これは、ログアウトアクションが状態を変更する操作であるため、セキュリティ上の理由からPOSTを通じてのみ行うべきだとされているためです。
+
+解決策
+
+ログアウト機能を適切に実装するには、以下の方法があります：
+
+- ログアウトリンクにPOSTリクエストを使用する
+    - ログアウトを行うためには、フォームを介してPOSTリクエストを送信する方法が推奨されます。これにより、CSRF保護を活用し、ログアウトが安全に行われます。
+
+以下のように、ログアウト用のフォームを追加し、ボタンクリックでPOSTリクエストを送信するようにします：
+
+html
+<!-- index.html -->
+<li class="nav-item">
+    <form action="{% url 'user_auth:logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-link nav-link" style="border: none; background-color: transparent;">Log out</button>
+    </form>
+</li>
+
+``` 
