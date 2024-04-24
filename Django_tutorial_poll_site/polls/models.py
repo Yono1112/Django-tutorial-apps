@@ -7,7 +7,7 @@ from django.contrib import admin
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
-    pub_date = models.DateTimeField("date published")
+    pub_date = models.DateTimeField("date published", default=timezone.now)
 
     # __str__ は Django の管理サイトでオブジェクトを表示するときや
     #   テンプレートでオブジェクトを表示するときに挿入される値として使われます。

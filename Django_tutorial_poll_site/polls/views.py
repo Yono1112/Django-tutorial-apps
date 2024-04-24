@@ -6,6 +6,7 @@ from django.views import generic
 from django.utils import timezone
 
 from .models import Question, Choice
+from .forms import NewQuestionForm, ChoiceFormSet
 
 
 class IndexView(generic.ListView):
@@ -18,20 +19,6 @@ class IndexView(generic.ListView):
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by(
             "-pub_date"
         )[:5]
-
-    def post(self, request, *args, **kwargs):
-        question_text = request.POST.get('question_text', '').strip()
-        if question_text:
-            new_question = Question(question_text=question_text, pub_date=timezone.now())
-            new_question.save()
-            return redirect(reverse('polls:index'))
-        else:
-            request.session['error_message'] = "The question text cannot be empty."
-            return redirect(reverse('polls:index'))
-            # return render(request, self.template_name, {
-            #     'error_message': "The question text cannot be empty.",
-            #     'latest_question_list': self.get_queryset()
-            # })
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -82,3 +69,20 @@ class ResultsView(generic.DetailView):
 # def results(request, question_id):
 #     question = get_object_or_404(Question, pk=question_id)
 #     return render(request, "polls/results.html", {"question": question})
+
+def add_question(request):
+    if request.method == 'POST':
+        form = NewQuestionForm(request.POST)
+        if form.is_valid():
+            # まずQuestionを保存します。
+            new_question = form.save()
+            # Questionに紐づくChoiceのフォームセットを処理します。
+            formset = ChoiceFormSet(request.POST, instance=new_question)
+            if formset.is_valid():
+                formset.save()
+                return redirect('polls:index')
+    else:
+        form = NewQuestionForm()
+        formset = ChoiceFormSet()
+
+    return render(request, 'polls/add_question.html', {'form': form, 'formset': formset})

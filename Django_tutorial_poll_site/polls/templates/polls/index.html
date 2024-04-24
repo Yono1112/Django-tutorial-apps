@@ -8,20 +8,12 @@
 <main class="container mt-4">
     <h1 class="mb-4">Polls List</h1>
 
-    <form action="{% url 'polls:index' %}" method="post">
-        {% csrf_token %}
-        <div class="input-group mb-3">
-            <input type="text" name="question_text" class="form-control" placeholder="Enter new question">
-            <button class="btn btn-success" type="submit">Add Question</button>
-        </div>
-    </form>
-
     {% if error_message %}
         {% bootstrap_alert content=error_message alert_type="danger" %}
     {% endif %}
 
     {% if latest_question_list %}
-        <div class="list-group">
+        <div class="list-group mb-3">
             {% for question in latest_question_list %}
                 <a href="{% url 'polls:detail' question.id %}" class="list-group-item list-group-item-action">
                     {{ question.question_text }}
@@ -31,8 +23,10 @@
             {% endfor %}
         </div>
     {% else %}
-        {% bootstrap_alert content="No polls are available" alert_type="danger" %}
+        {% bootstrap_alert content="No polls are available." alert_type="info" %}
     {% endif %}
+
+    <a href="{% url 'polls:add_question' %}" class="btn btn-primary mb-3">Add New Question</a>
 
 </main>
 {% endblock content %}

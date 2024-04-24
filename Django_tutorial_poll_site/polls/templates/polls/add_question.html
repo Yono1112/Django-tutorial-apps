@@ -1,0 +1,25 @@
+{% extends "polls/header.html" %}
+
+{% block title %}Add New Question{% endblock %}
+
+{% load django_bootstrap5 %}
+
+{% block content %}
+<main class="container mt-4">
+    <h1>Add a New Question</h1>
+    <form action="{% url 'polls:add_question' %}" method="post">
+        {% csrf_token %}
+		<div class="row">
+            <div class="col-md-12">
+                <h4>Question Details</h4>
+                {% bootstrap_form form %}
+            </div>
+            <div class="col-md-6">
+                <h4>Choices</h4>
+                {% bootstrap_formset formset %}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</main>
+{% endblock content %}

@@ -11,7 +11,9 @@
 </head>
 <body>
     <header style="display: flex; align-items: center;">
-        <img src="{% static 'polls/images/background.png' %}" alt="Poll Site Image" class="header-image">
+		<a href="{% url 'polls:index'%}" method="get">
+			<img src="{% static 'polls/images/background.png' %}" alt="Poll Site Image" class="header-image">
+		</a>
         <form action="{% url 'polls:index' %}" method="get">
             <button type="submit" class="header-button">
                 Poll Site
