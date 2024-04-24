@@ -10,15 +10,15 @@
     {% bootstrap_javascript %}
 </head>
 <body>
-    <header style="display: flex; align-items: center;">
-		<a href="{% url 'polls:index'%}" method="get">
-			<img src="{% static 'polls/images/background.png' %}" alt="Poll Site Image" class="header-image">
-		</a>
-        <form action="{% url 'polls:index' %}" method="get">
-            <button type="submit" class="header-button">
+    <header style="align-items: center;">
+        <nav class="navbar bg-body-tertiary bg-primary">
+            <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'polls:index' %}">
+                <img src="{% static 'polls/images/background.png' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
                 Poll Site
-            </button>
-        </form>
+            </a>
+            </div>
+        </nav>
     </header>
     {% block content %}{% endblock content %}
 </body>
