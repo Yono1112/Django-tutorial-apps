@@ -2,9 +2,9 @@ from django.views import generic
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
+from django.shortcuts import redirect
 
-
-from .forms import LoginForm
+from .forms import LoginForm, SignupForm
 
 
 class TopView(generic.TemplateView):
@@ -32,4 +32,23 @@ class OnlyYouMixin(UserPassesTestMixin):
 class MyPage(OnlyYouMixin, generic.DetailView):
     model = User
     template_name = 'user_auth/my_page.html'
-    # モデル名小文字(user)でモデルインスタンスがテンプレートファイルに渡される
+
+
+class Signup(generic.CreateView):
+    template_name = 'user_auth/user_form.html'
+    form_class = SignupForm
+
+    def form_valid(self, form):
+        form.save()
+        # user = form.save()
+        return redirect('user_auth:signup_done')
+
+    # データ送信
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["process_name"] = "Sign up"
+        return context
+
+
+class SignupDone(generic.TemplateView):
+    template_name = 'user_auth/signup_done.html'
