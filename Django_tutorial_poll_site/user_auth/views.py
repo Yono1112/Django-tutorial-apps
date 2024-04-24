@@ -2,9 +2,9 @@ from django.views import generic
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.models import User
-from django.shortcuts import redirect
+from django.shortcuts import redirect, resolve_url
 
-from .forms import LoginForm, SignupForm
+from .forms import LoginForm, SignupForm, UserUpdateForm
 
 
 class TopView(generic.TemplateView):
@@ -52,3 +52,17 @@ class Signup(generic.CreateView):
 
 class SignupDone(generic.TemplateView):
     template_name = 'user_auth/signup_done.html'
+
+
+class UserUpdate(OnlyYouMixin, generic.UpdateView):
+    model = User
+    form_class = UserUpdateForm
+    template_name = 'user_auth/user_form.html'
+
+    def get_success_url(self):
+        return resolve_url('user_auth:my_page', pk=self.kwargs['pk'])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["process_name"] = "Update"
+        return context
