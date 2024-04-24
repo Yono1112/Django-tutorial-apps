@@ -10,15 +10,32 @@
 </head>
 <body>
     <header style="align-items: center;">
-        <nav class="navbar bg-body-tertiary bg-primary">
+        <nav class="navbar navbar-expand-lg bg-primary">
             <div class="container-fluid">
-            <a class="navbar-brand" href="/">
-                <img src="{% static 'images/background.png' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
-                Poll Site
-            </a>
+                <a class="navbar-brand" href="/">
+                    <img src="{% static 'images/background.png' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+                    Poll Site
+                </a>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'user_auth:top'%}">Top</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'user_auth:login'%}">Login</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
+    <div class="pl-4 small" style="background-color: #e2e3e5 ; border-bottom: solid 1px #f3f3f3;">
+        {% if not user.is_authenticated %}
+            こんにちは！ ゲスト さん
+        {% else %}
+            こんにちは！ {{ user.username }} さん
+        {% endif %}
+    </div>
     {% block content %}{% endblock content %}
 </body>
 </html>

@@ -144,3 +144,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+LOGIN_URL = 'user_auth:login'  # ログインのURLの設定
+LOGIN_REDIRECT_URL = 'user_auth:top'  # ログインが完了した後に遷移するURL
