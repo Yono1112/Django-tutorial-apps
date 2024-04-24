@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth import get_user_model  # ユーザーモデルを取得するため
 from django import forms
 
@@ -48,3 +48,11 @@ class UserUpdateForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['required'] = ''
+
+class MyPasswordChangeForm(PasswordChangeForm):
+
+    # bootstrap4対応で、classを指定
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'

@@ -12,4 +12,7 @@ urlpatterns = [
     path('signup/', views.Signup.as_view(), name='signup'),
     path('signup_done/', views.SignupDone.as_view(), name='signup_done'),
     path('user_update/<int:pk>', views.UserUpdate.as_view(), name='user_update'),
+    path('password_change/', views.PasswordChange.as_view(), name='password_change'),
+    path('password_change_done/', views.PasswordChangeDone.as_view(), name='password_change_done'),
+
 ]
