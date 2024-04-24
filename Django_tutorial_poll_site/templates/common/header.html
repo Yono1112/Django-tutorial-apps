@@ -26,6 +26,9 @@
                                 <a class="nav-link" href="{% url 'user_auth:login' %}">Log in</a>
                             </li>
                         {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'user_auth:my_page' user.pk %}">My page</a>
+                            </li>
                             <form action="{% url 'user_auth:logout' %}" method="post">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-link nav-link" style="border: none; background-color: transparent;">Log out</button>
