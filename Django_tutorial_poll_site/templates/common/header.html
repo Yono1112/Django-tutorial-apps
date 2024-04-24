@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Polls Site{% endblock title %}</title>
     {% load static django_bootstrap5 %}
-    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
     {% bootstrap_css %}
     {% bootstrap_javascript %}
 </head>
@@ -13,8 +12,8 @@
     <header style="align-items: center;">
         <nav class="navbar bg-body-tertiary bg-primary">
             <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'polls:index' %}">
-                <img src="{% static 'polls/images/background.png' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
+            <a class="navbar-brand" href="/">
+                <img src="{% static 'images/background.png' %}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
                 Poll Site
             </a>
             </div>
