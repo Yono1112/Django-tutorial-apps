@@ -3,11 +3,13 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
+from django.contrib.auth.models import User
 
 
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField("date published", default=timezone.now)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     # __str__ は Django の管理サイトでオブジェクトを表示するときや
     #   テンプレートでオブジェクトを表示するときに挿入される値として使われます。

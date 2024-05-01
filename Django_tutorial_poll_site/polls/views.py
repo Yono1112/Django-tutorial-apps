@@ -74,7 +74,9 @@ def add_question(request):
         form = NewQuestionForm(request.POST)
         if form.is_valid():
             # まずQuestionを保存します。
-            new_question = form.save()
+            new_question = form.save(commit=False)
+            new_question.creator = request.user
+            new_question.save()
             # Questionに紐づくChoiceのフォームセットを処理します。
             formset = ChoiceFormSet(request.POST, instance=new_question)
             if formset.is_valid():
