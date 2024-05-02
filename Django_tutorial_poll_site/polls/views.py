@@ -4,12 +4,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+
 
 from .models import Question, Choice
 from .forms import NewQuestionForm, ChoiceFormSet
 
 
-class IndexView(generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "polls/index.html"
     context_object_name = "latest_question_list"
     paginate_by = 5
@@ -28,7 +31,7 @@ class IndexView(generic.ListView):
         return context
 
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Question
     template_name = "polls/detail.html"
 
@@ -60,7 +63,7 @@ class DetailView(generic.DetailView):
 #     return render(request, "polls/detail.html", {"question": question})
 
 
-class ResultsView(generic.DetailView):
+class ResultsView(LoginRequiredMixin, generic.DetailView):
     model = Question
     template_name = "polls/results.html"
 
@@ -69,6 +72,7 @@ class ResultsView(generic.DetailView):
 #     question = get_object_or_404(Question, pk=question_id)
 #     return render(request, "polls/results.html", {"question": question})
 
+@login_required
 def add_question(request):
     if request.method == 'POST':
         form = NewQuestionForm(request.POST)
