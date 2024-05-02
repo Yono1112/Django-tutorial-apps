@@ -15,5 +15,6 @@
 			{% endfor %}
 			</ul>
 		<a href="{% url 'polls:detail' question.id %}" class="btn btn-primary">Vote again?</a>
+		<a href="{% url 'polls:index' %}" class="btn btn-outline-secondary btn-block">Back to List</a>
     </main>
 {% endblock content %}
