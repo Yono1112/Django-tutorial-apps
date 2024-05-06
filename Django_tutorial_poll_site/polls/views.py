@@ -6,6 +6,7 @@ from django.views import generic
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 
 from .models import Question, Choice
@@ -21,14 +22,6 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         """Return the last five published questions
         (not including those set to be published in the future)."""
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by('-pub_date')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # セッションからエラーメッセージを取得し、それをコンテキストに追加してからセッションをクリア
-        error_message = self.request.session.pop('error_message', None)
-        if error_message:
-            context['error_message'] = error_message
-        return context
 
 
 class DetailView(LoginRequiredMixin, generic.DetailView):
@@ -85,6 +78,7 @@ def add_question(request):
             formset = ChoiceFormSet(request.POST, instance=new_question)
             if formset.is_valid():
                 formset.save()
+                messages.info(request, "新しいQuestionが作成されました")
                 return redirect('polls:index')
     else:
         form = NewQuestionForm()

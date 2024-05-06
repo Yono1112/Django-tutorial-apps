@@ -49,6 +49,7 @@ class UserUpdateForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['required'] = ''
 
+
 class MyPasswordChangeForm(PasswordChangeForm):
 
     # bootstrap4対応で、classを指定

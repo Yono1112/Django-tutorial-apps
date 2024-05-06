@@ -8,6 +8,16 @@
 <main class="container mt-4">
     <h1 class="mb-4">Polls List</h1>
 
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="list-group mb-1">
         {% for question in page_obj %}
         <a href="{% url 'polls:detail' question.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
