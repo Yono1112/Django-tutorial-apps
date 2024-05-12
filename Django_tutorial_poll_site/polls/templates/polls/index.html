@@ -20,7 +20,7 @@
 
     <div class="list-group mb-1">
         {% for question in page_obj %}
-        <a href="{% url 'polls:detail' question.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <a href="{% url 'polls:detail' question.id %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center async-link">
             <strong>{{ question.question_text }}</strong>
             <small class="text-muted text-end">Created by: {{ question.creator.username }}</small>
         </a>
@@ -35,12 +35,12 @@
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
                 <li class="page-item">
-                    <a class="page-link" href="?page=1" aria-label="Previous">
+                    <a class="page-link async-link" href="?page=1" aria-label="Previous">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <a class="page-link async-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
                         <span aria-hidden="true">&lt;</span>
                     </a>
                 </li>
@@ -61,18 +61,18 @@
                 {% if page_obj.number == num %}
                     <li class="page-item active"><span class="page-link">{{ num }}</span></li>
                 {% else %}
-                    <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                    <li class="page-item"><a class="page-link async-link" href="?page={{ num }}">{{ num }}</a></li>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <a class="page-link async-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
                         <span aria-hidden="true">&gt;</span>
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
+                    <a class="page-link async-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Next">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
@@ -91,7 +91,7 @@
         </ul>
     </nav>
 
-    <a href="{% url 'polls:add_question' %}" class="btn btn-primary mb-3">Add New Question</a>
+    <a href="{% url 'polls:add_question' %}" class="btn btn-primary mb-3 async-link">Add New Question</a>
 
 </main>
 {% endblock content %}

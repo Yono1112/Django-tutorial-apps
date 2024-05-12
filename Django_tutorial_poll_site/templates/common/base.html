@@ -9,9 +9,9 @@
     {% bootstrap_javascript %}
 </head>
 <body>
-	<!-- {% block header %} -->
+	<div class="header-placeholder">
 		{% include 'common/header.html' %}
-	<!-- {% endblock header %} -->
+	</div>
     <div class="pl-4 small" style="background-color: #e2e3e5 ; border-bottom: solid 1px #f3f3f3;">
         {% if not user.is_authenticated %}
             こんにちは！ ゲスト さん
@@ -19,7 +19,9 @@
             こんにちは！ {{ user.username }} さん
         {% endif %}
     </div>
-    {% block content %}{% endblock content %}
+	<div id="content-placeholder">
+		{% block content %}{% endblock content %}
+	</div>
 	<div class="hello">
 		<p>hello</p>
 	</div>
