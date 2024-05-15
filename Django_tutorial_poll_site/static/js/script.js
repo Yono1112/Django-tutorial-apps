@@ -21,6 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (newContent && currentContent) {
                         currentContent.innerHTML = newContent.innerHTML;
                         history.pushState({ path: url }, '', url); // URLを更新
+
+                        const offcanvasElement = document.querySelector('#offcanvasNavbar');
+                        const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
+                        if (offcanvas) {
+                            offcanvas.hide();
+                        }
                     }
                 })
                 .catch(error => console.error('Failed to fetch:', error));

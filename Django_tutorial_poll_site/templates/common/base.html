@@ -7,11 +7,13 @@
     {% load static django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-	<div class="header-placeholder">
-		{% include 'common/header.html' %}
-	</div>
+    <div class="header-placeholder">
+        {% include 'common/header.html' %}
+    </div>
     <div class="pl-4 small" style="background-color: #e2e3e5 ; border-bottom: solid 1px #f3f3f3;">
         {% if not user.is_authenticated %}
             こんにちは！ ゲスト さん
@@ -19,12 +21,19 @@
             こんにちは！ {{ user.username }} さん
         {% endif %}
     </div>
-	<div id="content-placeholder">
-		{% block content %}{% endblock content %}
-	</div>
-	<div class="hello">
-		<p>hello</p>
-	</div>
-	<script src="{% static 'js/script.js'%}"></script>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- <div class="col-md-3 d-none d-md-block">
+                {% include 'common/sidebar.html' %}
+            </div> -->
+            <div class="col-12 col-md-9">
+                <div id="content-placeholder">
+                    {% block content %}{% endblock content %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/script.js'%}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
